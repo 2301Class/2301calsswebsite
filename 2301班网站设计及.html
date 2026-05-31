@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>青春不散场 · 2301班独家回忆</title>
+    <style>
+        :root {
+            --cream: #fdf6e3;
+            --dark-green: #2c4a3e;
+            --gold: #c9a96e;
+            --warm-brown: #8b5e3c;
+            --card-bg: #fefaf3;
+            --shadow: 0 8px 32px rgba(0,0,0,0.08);
+            --shadow-lg: 0 16px 48px rgba(0,0,0,0.14);
+            --radius: 16px;
+            --transition: 0.3s ease;
+            --font-display: 'Georgia', 'Noto Serif SC', 'STSong', serif;
+            --font-body: 'Georgia', 'Noto Serif SC', 'STSong', serif;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--cream);
+            color: #3a3226;
+            line-height: 1.7;
+            overflow-x: hidden;
+            background-image: radial-gradient(ellipse at 20% 10%, rgba(200,170,120,0.08) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 90%, rgba(160,180,200,0.07) 0%, transparent 55%);
+        }
+        .petals-container { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:9999; overflow:hidden; }
+        .petal { position:absolute; top:-60px; pointer-events:none; animation:petalFall linear forwards; opacity:0.7; }
+        @keyframes petalFall { 0%{transform:translateY(-5vh) rotate(0deg) scale(1); opacity:0.8;} 100%{transform:translateY(105vh) rotate(400deg) scale(0.4); opacity:0;} }
+        .navbar { position:fixed; top:0; left:0; right:0; z-index:1000; background:rgba(253,246,227,0.88); backdrop-filter:blur(18px); border-bottom:1px solid rgba(180,150,110,0.25); padding:12px 0; transition:all 0.3s; }
+        .navbar.scrolled { box-shadow:0 2px 20px rgba(0,0,0,0.08); background:rgba(253,246,227,0.94); }
+        .navbar-inner { max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+        .nav-brand { font-family:var(--font-display); font-size:1.25rem; font-weight:bold; color:var(--dark-green); letter-spacing:0.04em; }
+        .nav-brand .icon-hat { display:inline-block; font-size:1.4rem; animation:hatBounce 2s infinite; margin-right:2px; }
+        @keyframes hatBounce { 0%,100%{transform:translateY(0) rotate(0);} 30%{transform:translateY(-8px) rotate(-8deg);} }
+        .nav-links { display:flex; gap:14px; list-style:none; flex-wrap:wrap; align-items:center; }
+        .nav-links a, .nav-links button { text-decoration:none; color:var(--warm-brown); font-size:0.9rem; background:none; border:none; cursor:pointer; font-family:inherit; padding:4px 0; letter-spacing:0.03em; }
+        .nav-links a::after { content:''; display:block; width:0; height:2px; background:var(--gold); transition:width 0.3s; }
+        .nav-links a:hover { color:var(--dark-green); } .nav-links a:hover::after { width:100%; }
+        .nav-music-btn { background:var(--dark-green)!important; color:#fff!important; padding:8px 16px!important; border-radius:24px!important; cursor:pointer; font-size:1.2rem!important; transition:all 0.3s!important; border:none!important; min-width:44px; text-align:center; }
+        .nav-music-btn:hover { background:#3d6b55!important; transform:translateY(-2px); box-shadow:0 6px 18px rgba(44,74,62,0.3); }
+        .nav-music-btn.playing { background:#c9a96e!important; animation:pulseMusic 1.6s infinite; }
+        @keyframes pulseMusic { 0%,100%{box-shadow:0 0 0 0 rgba(201,169,110,0.5);} 50%{box-shadow:0 0 0 16px rgba(201,169,110,0);} }
+
+        /* 首页动画 */
+        .hero {
+            min-height:100vh; display:flex; align-items:center; justify-content:center; text-align:center;
+            padding:100px 24px 60px; position:relative; overflow:hidden;
+            background:linear-gradient(175deg, #fdf6e3 0%, #f8f0e0 30%, #f3e8d6 60%, #efe2cf 100%);
+        }
+        .hero::before {
+            content:''; position:absolute; top:-120px; right:-120px; width:400px; height:400px;
+            border-radius:50%; background:radial-gradient(circle, rgba(200,170,120,0.15) 0%, transparent 70%); pointer-events:none;
+        }
+        .hero::after {
+            content:''; position:absolute; bottom:-80px; left:-80px; width:300px; height:300px;
+            border-radius:50%; background:radial-gradient(circle, rgba(160,190,210,0.12) 0%, transparent 70%); pointer-events:none;
+        }
+        .hero-content { position:relative; z-index:2; max-width:750px; }
+        .hero-badge { display:inline-block; background:var(--dark-green); color:#f0ece4; padding:8px 24px; border-radius:30px; font-size:0.9rem; margin-bottom:28px; animation:fadeInUp 0.8s ease-out; }
+        .hero-title { font-family:var(--font-display); font-size:clamp(2.8rem,6vw,4.5rem); color:var(--dark-green); animation:fadeInUp 0.8s ease-out 0.15s both; }
+        .hero-subtitle { font-size:1.3rem; color:var(--warm-brown); margin-bottom:20px; animation:fadeInUp 0.8s ease-out 0.3s both; }
+        .hero-chalk-line { width:80px; height:3px; background:var(--gold); margin:20px auto 28px; animation:fadeInUp 0.8s ease-out 0.45s both; }
+        .hero-desc { font-size:1.05rem; color:#6b5e4e; line-height:1.9; animation:fadeInUp 0.8s ease-out 0.55s both; }
+        .hero-scroll-hint {
+            position:absolute; bottom:30px; left:50%; transform:translateX(-50%);
+            animation: bounceDown 2s ease-in-out infinite; cursor:pointer; z-index:5;
+            color:var(--warm-brown); font-size:0.85rem; display:flex; flex-direction:column; align-items:center; gap:6px;
+        }
+        .hero-scroll-hint .arrow { font-size:1.4rem; animation: bounceArrow 1.5s ease-in-out infinite; }
+        @keyframes bounceDown { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(12px);} }
+        @keyframes bounceArrow { 0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);} }
+        @keyframes fadeInUp { from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);} }
+
+        .section { padding:70px 24px; max-width:1200px; margin:0 auto; }
+        .section-header { text-align:center; margin-bottom:50px; }
+        .section-header h2 { font-family:var(--font-display); font-size:2.2rem; color:var(--dark-green); position:relative; display:inline-block; }
+        .section-header h2::after { content:''; position:absolute; bottom:-10px; left:50%; transform:translateX(-50%); width:50px; height:3px; background:var(--gold); border-radius:2px; }
+        .section-header .sub { margin-top:16px; color:#7a6e5e; }
+
+        .curtain-container { overflow:hidden; padding:10px 0; }
+        .curtain-row { position:relative; width:100%; overflow:hidden; margin-bottom:24px; height:220px; }
+        .curtain-track { display:flex; gap:20px; width:max-content; will-change:transform; }
+        .curtain-track.row-reverse { animation:scrollRightToLeft 40s linear infinite; }
+        .curtain-track.row-forward { animation:scrollLeftToRight 40s linear infinite; }
+        .curtain-track.row-reverse2 { animation:scrollRightToLeft 40s linear infinite; }
+        .curtain-row:hover .curtain-track { animation-play-state:paused; }
+        @keyframes scrollRightToLeft { 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+        @keyframes scrollLeftToRight { 0%{transform:translateX(-50%);} 100%{transform:translateX(0);} }
+        .curtain-card { width:200px; height:200px; border-radius:12px; overflow:hidden; box-shadow:var(--shadow); background:#fffef9; flex-shrink:0; cursor:pointer; position:relative; transition:all 0.3s; }
+        .curtain-card:hover { transform:translateY(-8px) scale(1.03); box-shadow:var(--shadow-lg); z-index:5; }
+        .curtain-card img { width:100%; height:100%; object-fit:cover; display:block; }
+        .curtain-card .card-caption { position:absolute; bottom:0; left:0; right:0; background:rgba(0,0,0,0.55); color:#fff; font-size:0.8rem; padding:6px 10px; text-align:center; }
+        .curtain-card .delete-card-btn { position:absolute; top:8px; right:8px; background:rgba(0,0,0,0.6); color:#fff; border:none; border-radius:50%; width:24px; height:24px; font-size:12px; cursor:pointer; display:none; align-items:center; justify-content:center; z-index:6; }
+        .curtain-card:hover .delete-card-btn { display:flex; }
+        .curtain-card .delete-card-btn:hover { background:#c94b4b; }
+        .curtain-hint { text-align:center; margin-top:10px; color:var(--warm-brown); font-size:0.9rem; opacity:0.85; }
+
+        .timeline { position:relative; padding:20px 0; }
+        .timeline::before { content:''; position:absolute; left:50%; top:0; bottom:0; width:2px; background:linear-gradient(to bottom, transparent, var(--gold), var(--gold), transparent); transform:translateX(-50%); }
+        .timeline-item { display:flex; align-items:flex-start; margin-bottom:50px; position:relative; }
+        .timeline-item:nth-child(odd) { flex-direction:row; padding-right:calc(50% + 35px); }
+        .timeline-item:nth-child(even) { flex-direction:row-reverse; padding-left:calc(50% + 35px); }
+        .timeline-dot { position:absolute; left:50%; top:6px; transform:translateX(-50%); width:16px; height:16px; background:var(--gold); border-radius:50%; border:3px solid var(--cream); box-shadow:0 0 0 4px rgba(201,169,110,0.3); }
+        .timeline-content { background:var(--card-bg); border-radius:var(--radius); padding:20px 24px; box-shadow:var(--shadow); flex:1; position:relative; transition:all 0.3s; }
+        .timeline-content:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+        .timeline-content .year-tag { display:inline-block; background:var(--dark-green); color:#fff; padding:4px 14px; border-radius:16px; font-size:0.8rem; margin-bottom:8px; }
+        .timeline-actions { position:absolute; top:12px; right:16px; display:flex; gap:6px; opacity:0; transition:opacity 0.3s; }
+        .timeline-content:hover .timeline-actions { opacity:1; }
+        .timeline-actions button { background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:50%; width:26px; height:26px; font-size:0.85rem; cursor:pointer; transition:background 0.2s; }
+        .timeline-actions button.edit-btn:hover { background:var(--dark-green); }
+        .timeline-actions button:hover { background:#c94b4b; }
+
+        .messages-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:20px; }
+        .message-card {
+            background:var(--card-bg); border-radius:var(--radius); padding:24px 22px 20px;
+            box-shadow:var(--shadow); text-align:center; position:relative;
+            transition:all 0.3s; display:flex; flex-direction:column;
+        }
+        .message-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+        .message-card .avatar {
+            width:55px; height:55px; border-radius:50%; object-fit:cover;
+            margin:0 auto 8px; border:3px solid #fff; background:#e8e8e8;
+        }
+        .message-card .msg-name { font-weight:bold; color:var(--dark-green); font-size:1rem; margin-top:4px; }
+        .message-card .msg-position { font-size:0.8rem; color:#d4a574; margin-bottom:8px; }
+        .message-card .msg-text { font-style:italic; color:#5a4e3e; line-height:1.8; flex:1; }
+        .message-card .msg-time {
+            font-size:0.75rem; color:#b0a590; text-align:right; margin-top:8px;
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 0.05em;
+        }
+        .message-card .delete-msg-btn { position:absolute; top:12px; right:14px; background:rgba(0,0,0,0.4); color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; opacity:0; transition:opacity 0.3s; }
+        .message-card:hover .delete-msg-btn { opacity:1; }
+
+        .guestbook { background:var(--card-bg); border-radius:var(--radius); padding:32px 28px; box-shadow:var(--shadow); max-width:700px; margin:0 auto; text-align:center; }
+        .guestbook h3 { color:var(--dark-green); font-size:1.3rem; margin-bottom:6px; }
+        .guestbook .hint { color:#8b7b6b; font-size:0.85rem; margin-bottom:18px; }
+        .guestbook input, .guestbook textarea { font-family:var(--font-body); padding:10px 16px; border:2px solid #e0d5c5; border-radius:24px; background:#fffef9; outline:none; width:100%; margin-bottom:10px; }
+        .guestbook .submit-btn {
+            background: var(--dark-green); color: #fff; border: none;
+            padding: 12px 30px; border-radius: 30px; font-size: 1rem;
+            font-weight: bold; letter-spacing: 0.05em; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(44,74,62,0.25); transition: all 0.3s;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .guestbook .submit-btn:hover { background: #3d6b55; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(44,74,62,0.35); }
+        .guestbook .cancel-btn { background:#c9b99a; color:#3a3226; border:none; padding:10px 24px; border-radius:24px; cursor:pointer; font-size:0.9rem; margin-left:8px; }
+        .guestbook-entries { margin-top:20px; text-align:left; max-height:350px; overflow-y:auto; }
+        .guestbook-entries .entry { padding:14px 16px; border-bottom:1px solid #ebe3d6; position:relative; display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; }
+        .guestbook-entries .entry:hover { background:#fdf8f0; }
+        .entry-name { font-weight:bold; color:var(--dark-green); margin-right:auto; }
+        .entry-time { color:#b0a590; font-size:0.75rem; white-space:nowrap; }
+        .entry-actions { display:flex; gap:6px; margin-left:8px; opacity:0; transition:opacity 0.3s; }
+        .entry:hover .entry-actions { opacity:1; }
+        .entry-actions button {
+            background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:50%;
+            width:26px; height:26px; font-size:0.8rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+            transition:background 0.2s, transform 0.2s;
+        }
+        .entry-actions button:hover { transform:scale(1.1); }
+        .entry-actions .edit-entry-btn:hover { background:var(--dark-green); }
+        .entry-actions .delete-entry-btn:hover { background:#c94b4b; }
+
+        .album-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:20px; }
+        .album-card { background:#fffef9; border-radius:6px; overflow:hidden; box-shadow:var(--shadow); padding:12px 12px 20px; position:relative; transition:all 0.3s; }
+        .album-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+        .album-card .img-wrap { aspect-ratio:1/1; overflow:hidden; border-radius:3px; }
+        .album-card img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
+        .album-card:hover img { transform:scale(1.05); }
+        .album-card .album-caption { text-align:center; padding:10px 6px 0; font-size:0.85rem; color:#5a4e3e; }
+        .album-card .album-publisher { text-align:center; font-size:0.75rem; color:#d4a574; margin-top:2px; font-weight:bold; }
+        .album-card .album-comment { text-align:center; font-size:0.8rem; color:#8b7b6b; font-style:italic; margin-top:4px; }
+        .album-card .delete-album-btn { position:absolute; top:16px; right:16px; background:rgba(0,0,0,0.5); color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; opacity:0; z-index:5; transition:opacity 0.3s; }
+        .album-card:hover .delete-album-btn { opacity:1; }
+
+        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:10001; display:none; align-items:center; justify-content:center; padding:20px; }
+        .modal { background:#fffef9; border-radius:var(--radius); padding:30px 24px; max-width:480px; width:100%; position:relative; max-height:85vh; overflow-y:auto; }
+        .modal h3 { color:var(--dark-green); text-align:center; margin-bottom:20px; }
+        .modal .form-group { margin-bottom:16px; }
+        .modal label { display:block; font-size:0.85rem; color:#5a4e3e; margin-bottom:4px; }
+        .modal input[type="text"], .modal textarea { width:100%; padding:10px 14px; border:2px solid #e0d5c5; border-radius:20px; font-family:inherit; background:#fff; outline:none; }
+        .modal .btn-row { display:flex; gap:10px; justify-content:center; margin-top:20px; }
+        .btn-primary { background:var(--dark-green); color:#fff; border:none; padding:10px 24px; border-radius:24px; cursor:pointer; }
+        .btn-secondary { background:#e0d5c5; color:#3a3226; border:none; padding:10px 24px; border-radius:24px; cursor:pointer; }
+        .close-modal { position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.5rem; cursor:pointer; color:#8b7b6b; }
+        .add-btn { display:inline-flex; align-items:center; gap:6px; background:var(--dark-green); color:#fff; border:none; padding:8px 20px; border-radius:24px; cursor:pointer; margin:10px auto 20px; transition:background 0.3s, transform 0.2s; }
+        .add-btn:hover { background:#3d6b55; transform:translateY(-2px); box-shadow:0 6px 18px rgba(44,74,62,0.3); }
+
+        @media (max-width:768px) {
+            .timeline::before { left:20px; }
+            .timeline-item:nth-child(odd), .timeline-item:nth-child(even) { padding-left:50px; padding-right:0; }
+            .timeline-dot { left:20px; }
+            .curtain-row { height:160px; }
+            .curtain-card { width:150px; height:150px; }
+        }
+    </style>
+</head>
+<body>
+<div class="petals-container" id="petalsContainer" aria-hidden="true"></div>
+
+<nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+        <div class="nav-brand"><span class="icon-hat">🎓</span> 2301班 独家回忆</div>
+        <ul class="nav-links">
+            <li><a href="#hero">首页</a></li>
+            <li><a href="#memory-curtain">记忆幕布</a></li>
+            <li><a href="#timeline">时光轴</a></li>
+            <li><a href="#messages">寄语</a></li>
+            <li><a href="#guestbook">留言</a></li>
+            <li><a href="#album">剪影</a></li>
+            <li><button class="nav-music-btn" id="musicToggleBtn">🎵</button></li>
+        </ul>
+    </div>
+</nav>
+
+<section class="hero" id="hero">
+    <div class="hero-content">
+        <div class="hero-badge">🏫 2026届 · 毕业季</div>
+        <h1 class="hero-title">青春不散场</h1>
+        <p class="hero-subtitle">2301班 · 毕业纪念册</p>
+        <div class="hero-chalk-line"></div>
+        <p class="hero-desc">三年的时光，一千多个日夜<br>我们从陌生到熟悉，从青涩到成熟<br>黑板上的粉笔字、操场上的身影、教室里的欢笑<br>都将成为青春里最美的印记</p>
+    </div>
+    <div class="hero-scroll-hint" onclick="document.getElementById('memory-curtain').scrollIntoView({behavior:'smooth'})">
+        <span>向下翻阅回忆</span>
+        <span class="arrow">↓</span>
+    </div>
+</section>
+
+<section class="section" id="memory-curtain">
+    <div class="section-header"><h2>🎞️ 记忆幕布</h2><p class="sub">每张照片都是流动的青春</p></div>
+    <div style="text-align:center"><button class="add-btn" id="addCurtainBtn" onclick="openCurtainModal()">➕ 添加照片</button></div>
+    <div class="curtain-container" id="curtainContainer"></div>
+    <div class="curtain-hint" id="curtainHint"></div>
+</section>
+
+<section class="section" id="timeline">
+    <div class="section-header"><h2>⏳ 三年时光轴</h2><p class="sub">每一步都值得铭记</p></div>
+    <div style="text-align:center"><button class="add-btn" onclick="openTimelineModal()">➕ 添加时光</button></div>
+    <div class="timeline" id="timelineContainer"></div>
+</section>
+
+<section class="section" id="messages">
+    <div class="section-header"><h2>✉️ 同窗寄语</h2><p class="sub">说不完的话都留在这里</p></div>
+    <div style="text-align:center"><button class="add-btn" onclick="openMessageModal()">➕ 添加寄语</button></div>
+    <div class="messages-grid" id="messagesGrid"></div>
+</section>
+
+<section class="section" id="guestbook">
+    <div class="section-header"><h2>✍️ 留下你的祝福</h2></div>
+    <div class="guestbook">
+        <h3>📝 班级留言板</h3>
+        <p class="hint">写下名字和祝福，温暖永存</p>
+        <div><input type="text" id="guestName" placeholder="你的名字"><textarea id="guestMessage" placeholder="想说的话..." rows="2"></textarea></div>
+        <input type="hidden" id="guestEditId"><div style="margin:10px 0;">
+            <button class="submit-btn" onclick="submitGuestbook()">💛 留下祝福</button>
+            <button class="cancel-btn" id="cancelEditBtn" onclick="cancelEditGuestbook()" style="display:none;">取消编辑</button>
+        </div>
+        <div class="guestbook-entries" id="guestbookEntries"></div>
+    </div>
+</section>
+
+<section class="section" id="album">
+    <div class="section-header"><h2>📸 时光剪影</h2><p class="sub">上传瞬间，附上心情</p></div>
+    <div style="text-align:center"><button class="add-btn" onclick="openAlbumModal()">➕ 上传剪影</button></div>
+    <div class="album-grid" id="albumGrid"></div>
+</section>
+
+<footer style="text-align:center;padding:40px;color:#8b7b6b;border-top:1px solid rgba(180,150,110,0.2);margin-top:40px;">
+    <span style="font-size:2rem;">💛</span>
+    <p>2301班 · 2026届毕业纪念</p>
+    <p style="font-size:0.8rem;">青春不散场 · 我们不说再见</p>
+    <p style="font-size:0.8rem; margin-top:6px; opacity:0.8;">「愿此去繁花似锦，再相逢依然如故」</p>
+</footer>
+
+<!-- 模态框 (保持不变) -->
+<div id="musicModal" class="modal-overlay"><div class="modal"><button class="close-modal" onclick="closeMusicModal()">&times;</button><h3>🎵 设置背景音乐</h3><div class="form-group"><label>选择本地音乐文件</label><input type="file" id="musicFileInput" accept="audio/*"></div><p style="font-size:0.75rem;">💡 mp3/wav，建议小于5MB</p><div class="btn-row"><button class="btn-primary" onclick="saveMusic()">💾 保存并播放</button><button class="btn-secondary" onclick="closeMusicModal()">取消</button></div></div></div>
+<div id="curtainModal" class="modal-overlay"><div class="modal"><button class="close-modal" onclick="closeCurtainModal()">&times;</button><h3>📷 编辑照片</h3><input type="hidden" id="curtainEditId"><div class="form-group"><label>选择图片</label><input type="file" id="curtainFile" accept="image/*"></div><div class="form-group"><label>描述</label><input type="text" id="curtainCaption" placeholder="一句话描述..."></div><div class="btn-row"><button class="btn-primary" onclick="saveCurtainPhoto()">保存</button><button class="btn-secondary" onclick="closeCurtainModal()">取消</button><button class="btn-secondary" id="deleteCurtainBtn" style="background:#c94b4b;color:#fff;" onclick="deleteCurtainPhoto()">删除</button></div></div></div>
+<div id="timelineModal" class="modal-overlay"><div class="modal"><button class="close-modal" onclick="closeTimelineModal()">&times;</button><h3>⏳ 编辑时光</h3><input type="hidden" id="timelineEditId"><div class="form-group"><label>年份标签</label><input type="text" id="timelineYear"></div><div class="form-group"><label>标题</label><input type="text" id="timelineTitle"></div><div class="form-group"><label>描述</label><textarea id="timelineDesc" rows="3"></textarea></div><div class="btn-row"><button class="btn-primary" onclick="saveTimeline()">保存</button><button class="btn-secondary" onclick="closeTimelineModal()">取消</button></div></div></div>
+<div id="messageModal" class="modal-overlay"><div class="modal"><button class="close-modal" onclick="closeMessageModal()">&times;</button><h3>✉️ 添加寄语</h3><div class="form-group"><label>姓名</label><input type="text" id="msgName" placeholder="你的名字"></div><div class="form-group"><label>职位</label><input type="text" id="msgPosition"></div><div class="form-group"><label>上传头像</label><input type="file" id="msgAvatarFile" accept="image/*"></div><div class="form-group"><label>寄语</label><textarea id="msgText" rows="3" placeholder="想对大家说的话..."></textarea></div><div class="btn-row"><button class="btn-primary" onclick="saveMessage()">保存</button><button class="btn-secondary" onclick="closeMessageModal()">取消</button></div></div></div>
+<div id="albumModal" class="modal-overlay"><div class="modal"><button class="close-modal" onclick="closeAlbumModal()">&times;</button><h3>📸 上传剪影</h3><div class="form-group"><label>选择本地图片</label><input type="file" id="albumFile" accept="image/*"></div><div class="form-group"><label>发布人</label><input type="text" id="albumPublisher"></div><div class="form-group"><label>附言</label><input type="text" id="albumCaption"></div><div class="form-group"><label>留言</label><textarea id="albumComment" rows="2"></textarea></div><div class="btn-row"><button class="btn-primary" onclick="saveAlbum()">保存</button><button class="btn-secondary" onclick="closeAlbumModal()">取消</button></div></div></div>
+<div id="lightbox" class="modal-overlay" onclick="closeLightbox()"><span style="position:absolute;top:20px;right:30px;color:#fff;font-size:2rem;">&times;</span><img id="lightboxImg" src="" style="max-width:90vw;max-height:85vh;border-radius:12px;"></div>
+<audio id="bgMusic" loop preload="auto"></audio>
+
+<script>
+(function() {
+    const currentUserId = localStorage.getItem('grad_user_id_v1') || 
+        (() => { const id = 'user_' + Date.now().toString(36) + Math.random().toString(36).substr(2,6); localStorage.setItem('grad_user_id_v1', id); return id; })();
+
+    const blockedWords = ['色情','赌博','毒品','暴力','低俗','裸体','淫秽','黄色','枪支','弹药'];
+    function checkContent(text) { if(!text) return true; const lower = text.toLowerCase(); for(let w of blockedWords) { if(lower.includes(w)) return false; } return true; }
+
+    const KEYS = {
+        musicData: 'grad_music_v12', curtain: 'grad_curtain_v12', timeline: 'grad_timeline_v12',
+        messages: 'grad_messages_v12', guestbook: 'grad_guestbook_v12', album: 'grad_album_v12'
+    };
+
+    const DEFAULT_AVATAR = 'data:image/svg+xml,' + encodeURIComponent(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+            <circle cx="60" cy="60" r="60" fill="#e8e8e8"/>
+            <circle cx="60" cy="44" r="16" fill="#c0c0c0"/>
+            <path d="M30,90 Q30,66 60,66 Q90,66 90,90" fill="#c0c0c0"/>
+        </svg>
+    `);
+
+    const defaultCurtain = [
+        { id:1, src:'https://picsum.photos/seed/c1/300/300', caption:'晨读', userId: 'system' },
+        { id:2, src:'https://picsum.photos/seed/c2/300/300', caption:'课间', userId: 'system' },
+        { id:3, src:'https://picsum.photos/seed/c3/300/300', caption:'操场', userId: 'system' },
+        { id:4, src:'https://picsum.photos/seed/c4/300/300', caption:'晚自习', userId: 'system' },
+        { id:5, src:'https://picsum.photos/seed/c5/300/300', caption:'食堂', userId: 'system' },
+        { id:6, src:'https://picsum.photos/seed/c6/300/300', caption:'运动会', userId: 'system' },
+        { id:7, src:'https://picsum.photos/seed/c7/300/300', caption:'文艺汇演', userId: 'system' },
+        { id:8, src:'https://picsum.photos/seed/c8/300/300', caption:'春游', userId: 'system' },
+        { id:9, src:'https://picsum.photos/seed/c9/300/300', caption:'大扫除', userId: 'system' },
+        { id:10, src:'https://picsum.photos/seed/c10/300/300', caption:'毕业照', userId: 'system' },
+        { id:11, src:'https://picsum.photos/seed/c11/300/300', caption:'黑板报', userId: 'system' },
+        { id:12, src:'https://picsum.photos/seed/c12/300/300', caption:'好朋友', userId: 'system' }
+    ];
+    const defaultTimeline = [
+        { id:1, year:'2023·秋', title:'初遇·高一', desc:'青涩的我们走进这间教室。', userId:'system' },
+        { id:2, year:'2024·春夏', title:'相知·高二', desc:'篮球赛的呐喊、文化节的排练。', userId:'system' },
+        { id:3, year:'2025·秋冬', title:'冲刺·高三上', desc:'咖啡的香气弥漫在晚自习。', userId:'system' },
+        { id:4, year:'2026·夏', title:'告别·毕业', desc:'我们毕业了，但青春永不散场。', userId:'system' }
+    ];
+    function formatDate() { const d = new Date(); return d.getFullYear() + '.' + (d.getMonth()+1).toString().padStart(2,'0') + '.' + d.getDate().toString().padStart(2,'0'); }
+    const nowDate = formatDate();
+    const defaultMessages = [
+        { id:1, name:'小明', position:'班长', avatar:'https://picsum.photos/seed/av1/120/120', message:'2301班永远是我的家。', time:nowDate, userId:'system' },
+        { id:2, name:'小红', position:'文艺委员', avatar:'https://picsum.photos/seed/av2/120/120', message:'愿我们前程似锦！', time:nowDate, userId:'system' },
+        { id:3, name:'大壮', position:'体育委员', avatar:DEFAULT_AVATAR, message:'平凡的日子都是宝藏。', time:nowDate, userId:'system' },
+        { id:4, name:'小雪', position:'学习委员', avatar:'https://picsum.photos/seed/av4/120/120', message:'青春万岁！', time:nowDate, userId:'system' }
+    ];
+    const defaultGuestbook = [
+        { id:1, name:'班主任', message:'祝2301班的同学们前程似锦！', time:'2026-06-01 10:30', userId:'system' },
+        { id:2, name:'匿名', message:'毕业快乐！', time:'2026-06-02 14:20', userId:'system' }
+    ];
+
+    function loadData(key, defaults) {
+        const stored = localStorage.getItem(key);
+        if(stored) { try { return JSON.parse(stored); } catch(e) {} }
+        if(defaults) { localStorage.setItem(key, JSON.stringify(defaults)); return defaults; }
+        return [];
+    }
+
+    let curtainData = loadData(KEYS.curtain, defaultCurtain);
+    let timelineData = loadData(KEYS.timeline, defaultTimeline);
+    let messagesData = loadData(KEYS.messages, defaultMessages);
+    let guestbookData = loadData(KEYS.guestbook, defaultGuestbook);
+    let albumData = loadData(KEYS.album, []);
+    let musicDataUrl = localStorage.getItem(KEYS.musicData) || '';
+    let currentCurtainId = null;
+    const MAX_CURTAIN = 15;
+
+    function canEdit(item) {
+        if (!item || !item.userId) return true;
+        return item.userId === currentUserId || item.userId === 'system';
+    }
+
+    const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicToggleBtn');
+    let musicPlaying = false;
+    function updateMusicUI() { musicBtn.classList.toggle('playing', musicPlaying); if(musicDataUrl && bgMusic.src !== musicDataUrl) bgMusic.src = musicDataUrl; }
+    updateMusicUI(); if(musicDataUrl) bgMusic.src = musicDataUrl;
+    musicBtn.addEventListener('mouseenter', ()=>{ if(musicDataUrl && musicPlaying) musicBtn.textContent='🎶 播放中'; else musicBtn.textContent='🎵'; });
+    musicBtn.addEventListener('mouseleave', ()=>{ musicBtn.textContent='🎵'; });
+    musicBtn.addEventListener('click', (e)=>{ e.preventDefault(); if(!musicDataUrl) { openMusicModal(); return; } if(musicPlaying) { bgMusic.pause(); musicPlaying=false; } else { bgMusic.play().then(()=>{ musicPlaying=true; }).catch(()=>{}); } updateMusicUI(); });
+    window.openMusicModal = ()=>{ document.getElementById('musicFileInput').value=''; document.getElementById('musicModal').style.display='flex'; };
+    window.closeMusicModal = ()=>{ document.getElementById('musicModal').style.display='none'; };
+    window.saveMusic = function() {
+        const file = document.getElementById('musicFileInput').files[0];
+        if(!file) { alert('请选择音乐文件'); return; }
+        const reader = new FileReader();
+        reader.onload = e => { try { localStorage.setItem(KEYS.musicData, e.target.result); } catch { alert('文件过大'); return; } musicDataUrl=e.target.result; bgMusic.src=musicDataUrl; musicPlaying=false; updateMusicUI(); closeMusicModal(); bgMusic.play().then(()=>{ musicPlaying=true; updateMusicUI(); }); };
+        reader.readAsDataURL(file);
+    };
+
+    const petalsContainer = document.getElementById('petalsContainer');
+    const petalEmojis = ['🌸','💮','🌷','🪷','🌼','🍂','✨','💛','🌿','🍃'];
+    function createPetal() { const p=document.createElement('div'); p.classList.add('petal'); p.textContent=petalEmojis[Math.floor(Math.random()*petalEmojis.length)]; p.style.left=Math.random()*100+'%'; p.style.fontSize=(14+Math.random()*24)+'px'; p.style.animationDuration=(8+Math.random()*16)+'s'; petalsContainer.appendChild(p); setTimeout(()=>{ if(p.parentNode) p.remove(); }, 22000); }
+    for(let i=0;i<14;i++) setTimeout(createPetal, i*300);
+    setInterval(()=>{ if(petalsContainer.children.length<16) createPetal(); }, 2500);
+
+    const curtainContainer = document.getElementById('curtainContainer');
+    const curtainHint = document.getElementById('curtainHint');
+    function updateCurtainHint() {
+        const remaining = MAX_CURTAIN - curtainData.length;
+        if (remaining > 0) { curtainHint.textContent = `还可以添加 ${remaining} 张照片`; curtainHint.style.display = 'block'; }
+        else { curtainHint.textContent = ''; curtainHint.style.display = 'none'; }
+    }
+    function renderCurtain() {
+        const photos = curtainData.length ? curtainData : [];
+        const row1Items = photos.slice(0,5);
+        const row2Items = photos.slice(5,10);
+        const row3Items = photos.slice(10,15);
+        function buildRow(items, reverseClass) {
+            if (items.length === 0) return '';
+            const doubled = [...items, ...items];
+            return `<div class="curtain-row"><div class="curtain-track ${reverseClass}">${doubled.map(p => {
+                const editable = canEdit(p);
+                return `<div class="curtain-card" onclick="openCurtainEditor(${p.id})">
+                    <img src="${escapeHtml(p.src)}" alt="${escapeHtml(p.caption||'')}" loading="lazy">
+                    <div class="card-caption">${escapeHtml(p.caption||'')}</div>
+                    ${editable ? `<button class="delete-card-btn" onclick="event.stopPropagation();deleteCurtainCard(${p.id})">✕</button>` : ''}
+                </div>`;
+            }).join('')}</div></div>`;
+        }
+        let html = '';
+        if (row1Items.length > 0) html += buildRow(row1Items, 'row-reverse');
+        if (row2Items.length > 0) html += buildRow(row2Items, 'row-forward');
+        if (row3Items.length > 0) html += buildRow(row3Items, 'row-reverse2');
+        if (html === '') html = '<div style="text-align:center;padding:40px;color:#b0a590;">点击上方按钮添加照片，让记忆流动起来 ✨</div>';
+        curtainContainer.innerHTML = html;
+        updateCurtainHint();
+    }
+    window.openCurtainEditor = function(id) {
+        const photo = curtainData.find(p => p.id === id);
+        if (!photo) return;
+        if (!canEdit(photo)) { alert('您只能编辑自己发布的内容'); return; }
+        currentCurtainId = id;
+        document.getElementById('curtainEditId').value = id;
+        document.getElementById('curtainFile').value = '';
+        document.getElementById('curtainCaption').value = photo ? photo.caption : '';
+        document.getElementById('deleteCurtainBtn').style.display = photo ? 'inline-block' : 'none';
+        document.getElementById('curtainModal').style.display = 'flex';
+    };
+    window.closeCurtainModal = () => { document.getElementById('curtainModal').style.display='none'; };
+    window.openCurtainModal = function() {
+        if(curtainData.length >= MAX_CURTAIN) { alert('最多只能添加15张照片哦~'); return; }
+        currentCurtainId = null;
+        document.getElementById('curtainEditId').value = '';
+        document.getElementById('curtainFile').value = '';
+        document.getElementById('curtainCaption').value = '';
+        document.getElementById('deleteCurtainBtn').style.display = 'none';
+        document.getElementById('curtainModal').style.display = 'flex';
+    };
+    window.saveCurtainPhoto = function() {
+        const file = document.getElementById('curtainFile').files[0];
+        const caption = document.getElementById('curtainCaption').value.trim();
+        if (!checkContent(caption)) { alert('描述内容包含敏感信息，请修改'); return; }
+        const editId = document.getElementById('curtainEditId').value;
+        const updateData = (src) => {
+            if(editId) {
+                const idx = curtainData.findIndex(p => p.id == editId);
+                if(idx>-1) { 
+                    if (!canEdit(curtainData[idx])) { alert('没有权限'); return; }
+                    curtainData[idx].src = src; curtainData[idx].caption = caption; 
+                }
+            } else {
+                if(curtainData.length >= MAX_CURTAIN) { alert('已达上限，无法添加'); return; }
+                curtainData.push({ id: Date.now(), src, caption, userId: currentUserId });
+            }
+            localStorage.setItem(KEYS.curtain, JSON.stringify(curtainData));
+            renderCurtain();
+            closeCurtainModal();
+        };
+        if(file) { const reader = new FileReader(); reader.onload = e => updateData(e.target.result); reader.readAsDataURL(file); }
+        else if(editId) { const existing = curtainData.find(p => p.id == editId); if(existing) updateData(existing.src); else alert('请选择图片'); }
+        else { alert('请选择一张图片'); }
+    };
+    window.deleteCurtainCard = function(id) {
+        const photo = curtainData.find(p => p.id === id);
+        if (!photo) return;
+        if (!canEdit(photo)) { alert('您只能删除自己发布的内容'); return; }
+        if(!confirm('删除这张照片？')) return;
+        curtainData = curtainData.filter(p => p.id !== id);
+        localStorage.setItem(KEYS.curtain, JSON.stringify(curtainData));
+        renderCurtain();
+    };
+    window.deleteCurtainPhoto = function() {
+        const editId = document.getElementById('curtainEditId').value;
+        const photo = curtainData.find(p => p.id == editId);
+        if (!photo) return;
+        if (!canEdit(photo)) { alert('没有权限'); return; }
+        if(!confirm('删除？')) return;
+        curtainData = curtainData.filter(p => p.id != editId);
+        localStorage.setItem(KEYS.curtain, JSON.stringify(curtainData));
+        renderCurtain();
+        closeCurtainModal();
+    };
+    renderCurtain();
+
+    const timelineContainer = document.getElementById('timelineContainer');
+    function renderTimeline() {
+        timelineContainer.innerHTML = timelineData.map(t=>{
+            const editable = canEdit(t);
+            return `<div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-content"><span class="year-tag">${escapeHtml(t.year)}</span><h3>${escapeHtml(t.title)}</h3><p>${escapeHtml(t.desc)}</p>${editable ? `<div class="timeline-actions"><button class="edit-btn" onclick="editTimeline(${t.id})">✎</button><button onclick="deleteTimeline(${t.id})">✕</button></div>` : ''}</div></div>`;
+        }).join('');
+    }
+    window.deleteTimeline = id => {
+        const item = timelineData.find(t=>t.id===id);
+        if (!item) return;
+        if (!canEdit(item)) { alert('您只能删除自己发布的内容'); return; }
+        if(confirm('删除？')) { timelineData=timelineData.filter(t=>t.id!==id); localStorage.setItem(KEYS.timeline,JSON.stringify(timelineData)); renderTimeline(); }
+    };
+    window.editTimeline = id => {
+        const item=timelineData.find(t=>t.id===id);
+        if(!item) return;
+        if (!canEdit(item)) { alert('您只能编辑自己发布的内容'); return; }
+        document.getElementById('timelineEditId').value=id; document.getElementById('timelineYear').value=item.year; document.getElementById('timelineTitle').value=item.title; document.getElementById('timelineDesc').value=item.desc; document.getElementById('timelineModal').style.display='flex';
+    };
+    window.openTimelineModal = ()=>{ document.getElementById('timelineEditId').value=''; document.getElementById('timelineYear').value=''; document.getElementById('timelineTitle').value=''; document.getElementById('timelineDesc').value=''; document.getElementById('timelineModal').style.display='flex'; };
+    window.closeTimelineModal = ()=>{ document.getElementById('timelineModal').style.display='none'; };
+    window.saveTimeline = function() {
+        const id=document.getElementById('timelineEditId').value, year=document.getElementById('timelineYear').value.trim(), title=document.getElementById('timelineTitle').value.trim(), desc=document.getElementById('timelineDesc').value.trim();
+        if(!year||!title){alert('请填写完整');return;}
+        if (!checkContent(title) || !checkContent(desc)) { alert('内容包含敏感信息，请修改'); return; }
+        if(id){
+            const idx=timelineData.findIndex(t=>t.id==id);
+            if(idx>-1) {
+                if (!canEdit(timelineData[idx])) { alert('没有权限'); return; }
+                timelineData[idx]={...timelineData[idx],year,title,desc};
+            }
+        } else {
+            timelineData.push({id:Date.now(),year,title,desc,userId:currentUserId});
+        }
+        localStorage.setItem(KEYS.timeline,JSON.stringify(timelineData)); renderTimeline(); closeTimelineModal();
+    };
+    renderTimeline();
+
+    const messagesGrid = document.getElementById('messagesGrid');
+    function renderMessages() {
+        messagesGrid.innerHTML = messagesData.map(m=>{
+            const timeStr = m.time || '';
+            const avatarSrc = m.avatar || DEFAULT_AVATAR;
+            const editable = canEdit(m);
+            return `<div class="message-card">
+                ${editable ? `<button class="delete-msg-btn" onclick="deleteMessage(${m.id})">✕</button>` : ''}
+                <img class="avatar" src="${escapeHtml(avatarSrc)}" alt="${escapeHtml(m.name)}" loading="lazy" onerror="this.src='${DEFAULT_AVATAR}'">
+                <div class="msg-name">${escapeHtml(m.name)}</div>
+                ${m.position ? `<div class="msg-position">${escapeHtml(m.position)}</div>` : ''}
+                <p class="msg-text">${escapeHtml(m.message)}</p>
+                <div class="msg-time">${escapeHtml(timeStr)}</div>
+            </div>`;
+        }).join('');
+    }
+    window.deleteMessage = id => {
+        const item = messagesData.find(m=>m.id===id);
+        if (!item) return;
+        if (!canEdit(item)) { alert('您只能删除自己发布的内容'); return; }
+        if(confirm('删除？')) { messagesData=messagesData.filter(m=>m.id!==id); localStorage.setItem(KEYS.messages,JSON.stringify(messagesData)); renderMessages(); }
+    };
+    window.openMessageModal = ()=>{ document.getElementById('msgName').value=''; document.getElementById('msgPosition').value=''; document.getElementById('msgAvatarFile').value=''; document.getElementById('msgText').value=''; document.getElementById('messageModal').style.display='flex'; };
+    window.closeMessageModal = ()=>{ document.getElementById('messageModal').style.display='none'; };
+    window.saveMessage = function() {
+        let name = document.getElementById('msgName').value.trim();
+        const position = document.getElementById('msgPosition').value.trim();
+        const message = document.getElementById('msgText').value.trim();
+        const file = document.getElementById('msgAvatarFile').files[0];
+        if(!message) { alert('请填写寄语'); return; }
+        if (!checkContent(name) || !checkContent(message)) { alert('内容包含敏感信息，请修改'); return; }
+        if(!name) name = '匿名';
+        const timeNow = formatDate();
+        const saveWith=(avatar)=>{ messagesData.push({id:Date.now(),name,position,avatar,message,time:timeNow,userId:currentUserId}); localStorage.setItem(KEYS.messages,JSON.stringify(messagesData)); renderMessages(); closeMessageModal(); };
+        if(file){ const r=new FileReader(); r.onload=e=>saveWith(e.target.result); r.readAsDataURL(file); }
+        else saveWith(DEFAULT_AVATAR);
+    };
+    renderMessages();
+
+    const guestbookEntries = document.getElementById('guestbookEntries');
+    function saveGuestbook(){ localStorage.setItem(KEYS.guestbook,JSON.stringify(guestbookData)); }
+    function renderGuestbook(){
+        if(!guestbookData.length){ guestbookEntries.innerHTML='<p style="text-align:center;color:#b0a590;padding:20px;">还没有留言，来写下第一条祝福吧 💛</p>'; return; }
+        guestbookEntries.innerHTML = guestbookData.map(e=>{
+            const editable = canEdit(e);
+            return `<div class="entry">
+                <span class="entry-name">${escapeHtml(e.name)}</span>
+                <span class="entry-time">${escapeHtml(e.time||'')}</span>
+                ${editable ? `<span class="entry-actions">
+                    <button class="edit-entry-btn" onclick="editGuestbookEntry(${e.id})" title="编辑">✎</button>
+                    <button class="delete-entry-btn" onclick="deleteGuestbookEntry(${e.id})" title="删除">✕</button>
+                </span>` : ''}
+            </div>
+            <p style="margin:4px 0 0 0; padding-left:4px;">${escapeHtml(e.message)}</p>`;
+        }).join('');
+    }
+    window.editGuestbookEntry = id => { const entry=guestbookData.find(e=>e.id===id); if(!entry) return; if (!canEdit(entry)) { alert('您只能编辑自己的留言'); return; } document.getElementById('guestName').value=entry.name; document.getElementById('guestMessage').value=entry.message; document.getElementById('guestEditId').value=id; document.getElementById('cancelEditBtn').style.display='inline-block'; document.querySelector('.submit-btn').textContent='💾 更新祝福'; };
+    window.deleteGuestbookEntry = id => { const entry=guestbookData.find(e=>e.id===id); if(!entry) return; if (!canEdit(entry)) { alert('您只能删除自己的留言'); return; } if(confirm('删除？')) { guestbookData=guestbookData.filter(e=>e.id!==id); saveGuestbook(); renderGuestbook(); } };
+    window.cancelEditGuestbook = ()=>{ document.getElementById('guestName').value=''; document.getElementById('guestMessage').value=''; document.getElementById('guestEditId').value=''; document.getElementById('cancelEditBtn').style.display='none'; document.querySelector('.submit-btn').textContent='💛 留下祝福'; };
+    window.submitGuestbook = function(){
+        let name = document.getElementById('guestName').value.trim();
+        const msg = document.getElementById('guestMessage').value.trim();
+        const editId = document.getElementById('guestEditId').value;
+        if(!msg){alert('请填写留言内容');return;}
+        if (!checkContent(msg)) { alert('留言内容包含敏感信息，请修改'); return; }
+        if(!name) name = '匿名';
+        if(editId){ const idx=guestbookData.findIndex(e=>e.id==editId); if(idx>-1) { if (!canEdit(guestbookData[idx])) { alert('没有权限'); return; } guestbookData[idx].name=name; guestbookData[idx].message=msg; guestbookData[idx].time=new Date().toLocaleString(); } }
+        else { guestbookData.push({id:Date.now(),name,message:msg,time:new Date().toLocaleString(),userId:currentUserId}); if(guestbookData.length>80) guestbookData.shift(); }
+        saveGuestbook(); renderGuestbook(); cancelEditGuestbook();
+    };
+    renderGuestbook();
+
+    const albumGrid = document.getElementById('albumGrid');
+    function renderAlbum(){
+        albumGrid.innerHTML = albumData.map(a=>{
+            const editable = canEdit(a);
+            return `<div class="album-card">
+                ${editable ? `<button class="delete-album-btn" onclick="deleteAlbum(${a.id})">✕</button>` : ''}
+                <div class="img-wrap"><img src="${escapeHtml(a.src)}"></div>
+                <div class="album-caption">${escapeHtml(a.caption||'')}</div>
+                ${a.publisher?`<div class="album-publisher">📷 ${escapeHtml(a.publisher)}</div>`:''}
+                ${a.comment?`<div class="album-comment">💬 ${escapeHtml(a.comment)}</div>`:''}
+            </div>`;
+        }).join('');
+    }
+    window.deleteAlbum = id => { const item = albumData.find(a=>a.id===id); if(!item) return; if (!canEdit(item)) { alert('您只能删除自己发布的内容'); return; } if(confirm('删除？')) { albumData=albumData.filter(a=>a.id!==id); localStorage.setItem(KEYS.album,JSON.stringify(albumData)); renderAlbum(); } };
+    window.openAlbumModal = ()=>{ document.getElementById('albumFile').value=''; document.getElementById('albumPublisher').value=''; document.getElementById('albumCaption').value=''; document.getElementById('albumComment').value=''; document.getElementById('albumModal').style.display='flex'; };
+    window.closeAlbumModal = ()=>{ document.getElementById('albumModal').style.display='none'; };
+    window.saveAlbum = function(){
+        const file=document.getElementById('albumFile').files[0], publisher=document.getElementById('albumPublisher').value.trim(), caption=document.getElementById('albumCaption').value.trim(), comment=document.getElementById('albumComment').value.trim();
+        if(!file){alert('请选择图片');return;}
+        if (!checkContent(publisher) || !checkContent(caption) || !checkContent(comment)) { alert('内容包含敏感信息，请修改'); return; }
+        const reader=new FileReader(); reader.onload=e=>{ albumData.push({id:Date.now(),src:e.target.result,publisher,caption,comment,userId:currentUserId}); localStorage.setItem(KEYS.album,JSON.stringify(albumData)); renderAlbum(); closeAlbumModal(); }; reader.readAsDataURL(file);
+    };
+    renderAlbum();
+
+    window.openLightbox = src => { document.getElementById('lightboxImg').src=src; document.getElementById('lightbox').style.display='flex'; };
+    window.closeLightbox = () => { document.getElementById('lightbox').style.display='none'; };
+    function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+    window.addEventListener('scroll', ()=>{ document.getElementById('navbar').classList.toggle('scrolled', window.scrollY>80); });
+    document.querySelectorAll('.modal-overlay').forEach(o=>{ o.addEventListener('click', e=>{ if(e.target===o) o.style.display='none'; }); });
+    document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeLightbox(); });
+})();
+</script>
+</body>
+</html>
